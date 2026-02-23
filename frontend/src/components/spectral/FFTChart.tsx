@@ -66,7 +66,6 @@ const FFTChart: React.FC<FFTChartProps> = ({ data, sampleRate_Hz, axisLabel }) =
         showline: true,
         linecolor: '#E2E6EE',
         range: [0, 2500], // Restrict x-axis to 0-2500 Hz
-        max: 2500, // Prevent zooming beyond 2500 Hz
       },
       yaxis: {
         title: { text: 'Amplitude (g rms)', font: { size: 12 } },
@@ -78,8 +77,7 @@ const FFTChart: React.FC<FFTChartProps> = ({ data, sampleRate_Hz, axisLabel }) =
         showline: true,
         linecolor: '#E2E6EE',
       },
-      height: 300,
-      margin: { t: 20, r: 20, b: 50, l: 60 },
+      margin: { t: 10, r: 20, b: 40, l: 60 },
       hovermode: 'x',
       spikedistance: -1,
       dragmode: 'zoom',
@@ -92,7 +90,7 @@ const FFTChart: React.FC<FFTChartProps> = ({ data, sampleRate_Hz, axisLabel }) =
       scrollZoom: true,
     };
 
-    Plotly.newPlot(plotRef.current, plotData, layout, config);
+    Plotly.react(plotRef.current, plotData, layout, config);
 
     return () => {
       if (plotRef.current) {
