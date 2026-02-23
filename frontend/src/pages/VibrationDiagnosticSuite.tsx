@@ -45,7 +45,7 @@ export const VibrationDiagnosticSuite: React.FC = () => {
   const [trendError, setTrendError] = useState<string | null>(null);
 
   const [waveformData, setWaveformData] = useState<WaveformResponse | null>(null);
-  const [selectedAxis, setSelectedAxis] = useState<'horiz' | 'vert' | 'axial'>('horiz');
+  const [selectedAxis, setSelectedAxis] = useState<'horiz' | 'vert' | 'axial'>('axial');
   const [isWaveformLoading, setIsWaveformLoading] = useState(false);
   const [waveformError, setWaveformError] = useState<string | null>(null);
   const [noRawWaveform, setNoRawWaveform] = useState(false);
