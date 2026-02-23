@@ -18,12 +18,12 @@ const TimeWaveformChart: React.FC<TimeWaveformChartProps> = ({ data, sampleRate_
 
 
 
-  // Compute max absolute value and padded y-limit
-  const maxAbs = useMemo(() => (data.length ? Math.max(...data.map(v => Math.abs(v))) : 1), [data]);
-  const padding = useMemo(() => maxAbs * 0.15, [maxAbs]);
-  const yLimit = useMemo(() => maxAbs + padding, [maxAbs, padding]);
+  // Dynamically compute y-limit to avoid spike truncation
+  const defaultLimit = 0.5;
+  const maxAbs = useMemo(() => (data.length ? Math.max(...data.map(v => Math.abs(v))) : 0), [data]);
+  const finalLimit = useMemo(() => Math.max(defaultLimit, maxAbs * 1.1), [defaultLimit, maxAbs]);
 
-  // Compute nice tick values for y-axis (1 or 2 decimals)
+  // Compute y-ticks for the current range
   function getNiceTicks(min: number, max: number, count = 5) {
     if (min === max) {
       const delta = Math.abs(min) > 0.1 ? Math.abs(min) * 0.1 : 0.1;
@@ -33,19 +33,22 @@ const TimeWaveformChart: React.FC<TimeWaveformChartProps> = ({ data, sampleRate_
     const decimals = step < 0.1 ? 2 : 1;
     return Array.from({ length: count }, (_, i) => parseFloat((min + i * step).toFixed(decimals)));
   }
-
-  // Always use dynamic y-axis ticks and range
-  const yTicks = useMemo(() => getNiceTicks(-yLimit, yLimit), [yLimit]);
+  const yTicks = useMemo(() => getNiceTicks(-finalLimit, finalLimit), [finalLimit]);
 
 
-  // Reset zoom: restore dynamic y-axis range and ticks
+  // Reset zoom: restore x/y axis range and ticks with recalculated y-limit
   const handleResetZoom = () => {
     if (!plotRef.current) return;
+    const maxAbsNow = data.length ? Math.max(...data.map(v => Math.abs(v))) : 0;
+    const finalLimitNow = Math.max(defaultLimit, maxAbsNow * 1.1);
+    const yTicksNow = getNiceTicks(-finalLimitNow, finalLimitNow);
     Plotly.relayout(plotRef.current, {
-      'xaxis.autorange': true,
-      'yaxis.range': [-yLimit, yLimit],
+      'xaxis.range': [0, maxDuration],
+      'xaxis.autorange': false,
+      'yaxis.range': [-finalLimitNow, finalLimitNow],
+      'yaxis.autorange': false,
       'yaxis.tickmode': 'array',
-      'yaxis.tickvals': yTicks,
+      'yaxis.tickvals': yTicksNow,
     });
   };
 
@@ -66,21 +69,26 @@ const TimeWaveformChart: React.FC<TimeWaveformChartProps> = ({ data, sampleRate_
       title: null,
       xaxis: {
         title: { text: 'Time (s)', font: { size: 12 } },
-        autorange: true,
+        range: [0, maxDuration],
+        autorange: false,
         showgrid: true,
         zeroline: true,
         showspikes: true,
+        showline: true,
+        mirror: false,
+        linewidth: 2,
         spikemode: 'across',
         spikethickness: 1,
         spikecolor: '#6366F1',
       },
       yaxis: {
         title: { text: 'Acceleration (g)', font: { size: 12 } },
-        range: [-yLimit, yLimit],
+        range: [-finalLimit, finalLimit],
+        autorange: false,
         zeroline: true,
         showline: true,
         linewidth: 2,
-        mirror: true,
+        mirror: false,
         fixedrange: false,
         showspikes: true,
         spikemode: 'across',
@@ -103,49 +111,14 @@ const TimeWaveformChart: React.FC<TimeWaveformChartProps> = ({ data, sampleRate_
     // Relayout handler for user interaction (zoom/pan)
     const handleRelayout = (eventData: any) => {
       if (!plotRef.current) return;
-
-      let x0 = eventData['xaxis.range[0]'];
-      let x1 = eventData['xaxis.range[1]'];
-      if (eventData['xaxis.autorange'] === true) {
-        x0 = 0;
-        x1 = maxDuration;
+      // If user zooms/pans, enable autorange for both axes
+      if ((eventData['xaxis.range[0]'] !== undefined && eventData['xaxis.range[1]'] !== undefined) ||
+          (eventData['yaxis.range[0]'] !== undefined && eventData['yaxis.range[1]'] !== undefined)) {
+        Plotly.relayout(plotRef.current, {
+          'xaxis.autorange': true,
+          'yaxis.autorange': true
+        });
       }
-      if (x0 === undefined || x1 === undefined) return;
-
-      const xspan = Math.abs(x1 - x0);
-
-      // X-axis dynamic ticks
-      let xtickmode, xdtick, xtickformat;
-      if (xspan >= 1) {
-        xtickmode = 'linear';
-        xdtick = Math.max(1, Math.floor(xspan / 5));
-        xtickformat = 'd';
-      } else if (xspan >= 0.1) {
-        xtickmode = 'linear';
-        xdtick = 0.1;
-        xtickformat = '.1f';
-      } else if (xspan >= 0.01) {
-        xtickmode = 'linear';
-        xdtick = 0.01;
-        xtickformat = '.2f';
-      } else {
-        xtickmode = 'linear';
-        xdtick = 0.001;
-        xtickformat = '.3f';
-      }
-
-      // Y-axis dynamic ticks (always use [-yLimit, yLimit])
-      let ytickmode = 'array';
-      let ytickvals = getNiceTicks(-yLimit, yLimit);
-
-      Plotly.relayout(plotRef.current, {
-        'xaxis.tickmode': xtickmode,
-        'xaxis.dtick': xdtick,
-        'xaxis.tickformat': xtickformat,
-        'yaxis.tickmode': ytickmode,
-        'yaxis.tickvals': ytickvals,
-        'yaxis.range': [-yLimit, yLimit],
-      });
     };
 
     plotRef.current.addEventListener('plotly_relayout', handleRelayout);
@@ -156,7 +129,7 @@ const TimeWaveformChart: React.FC<TimeWaveformChartProps> = ({ data, sampleRate_
         Plotly.purge(plotRef.current);
       }
     };
-  }, [data, timeAxis, maxDuration, sampleRate_Hz, yLimit, yTicks]);
+  }, [data, timeAxis, maxDuration, sampleRate_Hz, finalLimit, yTicks]);
 
   return (
     <div className="time-waveform-wrapper">
