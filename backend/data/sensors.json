@@ -1,0 +1,22 @@
+{
+  "sensors": [
+    {
+      "sensorId": "20233900020014",
+      "displayName": "Gearbox Drive End",
+      "sensorType": "SR-71VT",
+      "location": "Smart Conveying / Conveying Area / Gearbox DE"
+    },
+    {
+      "sensorId": "12242400020011",
+      "displayName": "Gearbox Non-Drive End",
+      "sensorType": "SR-71VT",
+      "location": "Smart Conveying / Conveying Area / Gearbox NDE"
+    },
+ {
+      "sensorId": "12250700020012",
+      "displayName": "Conveying Equip",
+      "sensorType": "SR-71VT",
+      "location": "Smart Conveying / Conveying Area / Gearbox NDE"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+@import './styles/global.css';
+@import './styles/layout.css';
+@import './styles/sidebar.css';
+@import './styles/header.css';
+@import './styles/metric-card.css';
+@import './styles/chart.css';
+@import './styles/executive-overview.css';

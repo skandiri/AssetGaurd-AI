@@ -1,0 +1,53 @@
+# .gitignore for Node.js, React, and general development
+# Node modules
+node_modules/
+
+# Build outputs
+build/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
+
+# VSCode settings
+.vscode/
+
+# Dependency directories
+frontend/node_modules/
+backend/node_modules/
+
+# Output folders
+frontend/dist/
+backend/dist/
+
+# Prisma
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# Misc
+*.local
+*.log
+*.tmp
+
+# Ignore coverage reports
+coverage/
+
+# Ignore IDE files
+.idea/
+*.iml
+
+# Ignore test outputs
+*.test-results.json
+
+# Ignore next.js build
+.next/

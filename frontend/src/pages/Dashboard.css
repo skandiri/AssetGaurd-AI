@@ -1,0 +1,148 @@
+/* Dashboard.css */
+
+.dashboard-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-header p {
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+.create-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.create-user-btn:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.create-user-btn:active {
+  transform: translateY(0);
+}
+
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-assets {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+}
+
+.dashboard-assets h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.asset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.asset-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.asset-item:hover {
+  background-color: #f9fafb;
+}
+
+.asset-info {
+  flex: 1;
+}
+
+.asset-name {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0;
+}
+
+.asset-status {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.asset-status.active {
+  color: #16a34a;
+}
+
+.asset-status.inactive {
+  color: #dc2626;
+}
+
+.asset-stats {
+  text-align: right;
+}
+
+.asset-health-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.health-bar-container {
+  width: 6rem;
+  height: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  margin-top: 0.25rem;
+  overflow: hidden;
+}
+
+.health-bar {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.health-bar.healthy {
+  background-color: #10b981;
+}
+
+.health-bar.warning {
+  background-color: #f59e0b;
+}
+
+.health-bar.critical {
+  background-color: #ef4444;
+}

@@ -1,0 +1,14 @@
+{
+  "sensorId": "SENSOR_001",
+  "timestamp": "2026-02-18T10:30:00Z",
+  "sensorType": "accelerometer",
+  "config": {
+    "sampleRate_Hz": 1000,
+    "accelRange_g": 16
+  },
+  "sensorParameters": {
+    "rawHoriz": "BASE64_ENCODED_DATA_HERE",
+    "rawVert": "BASE64_ENCODED_DATA_HERE",
+    "rawAxial": "BASE64_ENCODED_DATA_HERE"
+  }
+}

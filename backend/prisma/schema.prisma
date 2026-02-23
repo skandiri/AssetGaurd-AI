@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ====== Enums (represented as String for SQLite) ======
+// FormStatus: DRAFT, PUBLISHED, ARCHIVED
+// FieldType: TEXT, NUMBER, DROPDOWN, DATE, BOOLEAN
+
+// ====== User Model ======
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  password     String
+  firstName    String
+  lastName     String
+  mobileNumber String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  formTemplates FormTemplate[]
+  assetRecords  AssetRecord[]
+
+  @@map("users")
+}
+
+// ====== Form Builder Models ======
+
+model FormTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  version     Int      @default(1)
+  status      String   @default("DRAFT")
+  createdBy   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenantId    String?
+
+  user             User             @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  fieldDefinitions FieldDefinition[]
+  assetRecords     AssetRecord[]
+
+  @@index([createdBy])
+  @@index([tenantId])
+  @@index([status])
+  @@map("form_templates")
+}
+
+model FieldDefinition {
+  id           String  @id @default(cuid())
+  formId       String
+  fieldName    String
+  fieldType    String
+  required     Boolean @default(false)
+  order        Int
+  validation   String?
+  uiProperties String?
+  options      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  formTemplate FormTemplate      @relation(fields: [formId], references: [id], onDelete: Cascade)
+  fieldValues  AssetFieldValue[]
+
+  @@unique([formId, fieldName])
+  @@index([formId])
+  @@index([order])
+  @@map("field_definitions")
+}
+
+model AssetRecord {
+  id          String   @id @default(cuid())
+  formId      String
+  formVersion Int
+  assetType   String
+  createdBy   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  formTemplate FormTemplate       @relation(fields: [formId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  fieldValues  AssetFieldValue[]
+
+  @@index([formId])
+  @@index([createdBy])
+  @@index([assetType])
+  @@index([createdAt])
+  @@map("asset_records")
+}
+
+model AssetFieldValue {
+  id        String   @id @default(cuid())
+  assetId   String
+  fieldId   String
+  dataKey   String
+  value     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assetRecord      AssetRecord      @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  fieldDefinition  FieldDefinition  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, fieldId])
+  @@index([assetId])
+  @@index([fieldId])
+  @@index([dataKey])
+  @@map("asset_field_values")
+}
