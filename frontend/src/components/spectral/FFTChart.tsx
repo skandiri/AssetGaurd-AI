@@ -66,6 +66,7 @@ const FFTChart: React.FC<FFTChartProps> = ({ data, sampleRate_Hz, axisLabel }) =
         showline: true,
         linecolor: '#E2E6EE',
         range: [0, 2500], // Restrict x-axis to 0-2500 Hz
+        spikeformat: '.2f',
       },
       yaxis: {
         title: { text: 'Amplitude (g rms)', font: { size: 12 } },
@@ -76,6 +77,7 @@ const FFTChart: React.FC<FFTChartProps> = ({ data, sampleRate_Hz, axisLabel }) =
         spikedash: 'dot',
         showline: true,
         linecolor: '#E2E6EE',
+        spikeformat: '.5f',
       },
       margin: { t: 10, r: 20, b: 40, l: 60 },
       hovermode: 'x',

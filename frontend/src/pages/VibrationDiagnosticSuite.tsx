@@ -177,7 +177,7 @@ export const VibrationDiagnosticSuite: React.FC = () => {
     setIsWaveformLoading(true);
     setWaveformError(null);
     setNoRawWaveform(false);
-    setSelectedAxis('horiz');
+    setSelectedAxis('axial');
 
     try {
       console.log('Fetching waveform for sensor:', selectedSensor, 'timestamp:', clickedTimestamp);

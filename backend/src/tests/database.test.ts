@@ -14,13 +14,15 @@ async function runTests() {
     const newUser = await prisma.user.create({
       data: {
         email: `test-${Date.now()}@example.com`,
-        name: 'Test User'
+        password: 'testpassword123',
+        firstName: 'Test',
+        lastName: 'User'
       }
     });
     console.log('✅ User created:', newUser);
     console.log(`   ID: ${newUser.id}`);
     console.log(`   Email: ${newUser.email}`);
-    console.log(`   Name: ${newUser.name}\n`);
+    console.log(`   Name: ${newUser.firstName} ${newUser.lastName}\n`);
 
     // Test 2: Fetch all users
     console.log('📋 Test 2: Fetching all users...');
@@ -38,18 +40,19 @@ async function runTests() {
     });
     console.log('✅ User found:');
     console.log(`   Email: ${userById?.email}`);
-    console.log(`   Name: ${userById?.name}\n`);
+    console.log(`   Name: ${userById?.firstName} ${userById?.lastName}\n`);
 
     // Test 4: Update user
     console.log(`✏️  Test 4: Updating user...`);
     const updatedUser = await prisma.user.update({
       where: { id: newUser.id },
       data: {
-        name: 'Updated Test User'
+        firstName: 'Updated',
+        lastName: 'User'
       }
     });
     console.log('✅ User updated:');
-    console.log(`   Name changed to: ${updatedUser.name}\n`);
+    console.log(`   Name changed to: ${updatedUser.firstName} ${updatedUser.lastName}\n`);
 
     // Test 5: Delete user
     console.log(`🗑️  Test 5: Deleting user...`);
