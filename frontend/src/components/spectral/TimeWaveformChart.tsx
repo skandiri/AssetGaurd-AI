@@ -80,6 +80,7 @@ const TimeWaveformChart: React.FC<TimeWaveformChartProps> = ({ data, sampleRate_
         spikemode: 'across',
         spikethickness: 1,
         spikecolor: '#6366F1',
+        spikeformat: '.3f',
       },
       yaxis: {
         title: { text: 'Acceleration (g)', font: { size: 12 } },
@@ -97,6 +98,7 @@ const TimeWaveformChart: React.FC<TimeWaveformChartProps> = ({ data, sampleRate_
         spikedash: 'solid',
         tickmode: 'array',
         tickvals: yTicks,
+        spikeformat: '.4f',
       },
       margin: { t: 10, r: 20, b: 50, l: 60 },
       hovermode: 'x',
